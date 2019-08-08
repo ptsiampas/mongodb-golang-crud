@@ -11,7 +11,6 @@ To get a simple mongo database setup and running, just use docker-compose to lau
 ```console
 petert@dogmeat:~/go/src/mongodb-golang-crud $ docker-compose up -d
 petert@dogmeat:~/go/src/mongodb-golang-crud $ docker exec -it mongodb_mongo_1 bash
-# mongo -u "root" --authenticationDatabase "admin" -p 1234
 root@7efbbcbe89b4:/# mongo -u "root" --authenticationDatabase "admin" -p 1234
 MongoDB shell version v3.6.4
 connecting to: mongodb://127.0.0.1:27017
