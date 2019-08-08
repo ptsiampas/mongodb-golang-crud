@@ -1,0 +1,8 @@
+db.books.insertMany([
+  {isbn:"978-1503261969",title:"Emma",author:"Jayne Austen",price:9.44},
+  {isbn:"978-1505255607",title:"The Time Machine",author:"H. G. Wells",price:5.99},
+  {isbn:"978-1503379640",title:"The Prince",author:"Niccolò Machiavelli",price:6.99},
+  {isbn:"978-0062457714",title:"The Subtle Art of Not Giving a F*ck",author:"Mark Manson",price:32.28},
+  {isbn:"978-0730324218",title:"The Barefoot Investor 2019 Update: The Only Money Guide You'll Ever Need",author:"Scott Pape",price:18.98}
+])
+

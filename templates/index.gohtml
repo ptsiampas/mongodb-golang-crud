@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index of Books</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+{{template "Menu"}}
+<h1>Book List</h1>
+
+{{if .}}
+    <table class="darkTable">
+        <tr>
+            <th>ISBN</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Price</th>
+            <th>&nbsp;</th>
+        </tr>
+        {{range .}}
+            <tr>
+                <td><a href="/book/read?isbn={{.Isbn}}">{{.Isbn}}</a></td>
+                <td>{{.Title}}</td>
+                <td>{{.Author}}</td>
+                <td>{{.Price}}</td>
+                <td><a href="/book/update?isbn={{.Isbn}}">Update</a></td>
+                <td><a href="/book/delete?isbn={{.Isbn}}">Delete</a></td>
+            </tr>
+        {{end}}
+    </table>
+{{end}}
+
+</body>
+</html>

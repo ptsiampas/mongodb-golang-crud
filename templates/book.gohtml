@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book - {{.Title}}</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+{{template "Menu"}}
+{{if .}}
+    <h1>{{.Title}}</h1>
+    <table  class="darkTable">
+        <tr>
+            <th>ISBN</th>
+            <td>{{.Isbn}}</td>
+        </tr>
+        <tr>
+            <th>Title</th>
+            <td>{{.Title}}</td>
+        </tr>
+        <tr>
+            <th>Author</th>
+            <td>{{.Author}}</td>
+        </tr>
+        <tr>
+            <th>Price</th>
+            <td>{{.Price}}</td>
+        </tr>
+        <tr>
+            <th>Buy</th>
+            <td><a href="https://isbnsearch.org/isbn/{{.Isbn}}" target="_blank">Isbn Search </a></td>
+        </tr>
+    </table>
+{{end}}
+</body>
+</html>

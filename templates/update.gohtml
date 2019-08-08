@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update {{.Title}}</title>
+</head>
+<body>
+
+{{template "Menu"}}
+
+<h1>Create A New Book</h1>
+<form action="/book/update?s={{.Id.Hex}}" method="post">
+    <input type="text" name="isbn" value="{{.Isbn}}" placeholder="isbn" required autofocus>
+    <input type="text" name="title" value="{{.Title}}" placeholder="title" required>
+    <input type="text" name="author" value="{{.Author}}" placeholder="author" required>
+    <input type="number" min="1" step="any" value="{{.Price}}" name="price" placeholder="price" required>
+    <input type="submit" value="Save">
+</form>
+
+</body>
+</html>
