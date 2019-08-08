@@ -8,7 +8,7 @@ To use this example, clone the repository and then move into the cloned director
 ## Setup
 To get a simple mongo database setup and running, just use docker-compose to launch the admin front end and a secure version of mongo db.
 
-```bash
+```console
 petert@dogmeat:~/go/src/mongodb-golang-crud $ docker-compose up -d
 petert@dogmeat:~/go/src/mongodb-golang-crud $ docker exec -it mongodb_mongo_1 bash
 # mongo -u "root" --authenticationDatabase "admin" -p 1234
