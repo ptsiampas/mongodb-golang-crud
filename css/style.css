@@ -1,7 +1,7 @@
 table.darkTable {
     font-family: "Arial Black", Gadget, sans-serif;
     border: 2px solid #000000;
-    width: 70%;
+    width: 50%;
     background-color: #4A4A4A;
     text-align: center;
     border-collapse: collapse;
@@ -61,3 +61,21 @@ input {
     color: blue;
     border: 1px solid lightblue;
 }
+
+a {
+    background-color: red;
+    color: white;
+    margin: 4px 0 4px 0;
+    padding: 2px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+a:hover {
+    background-color: blue;
+}
+
+a:active {
+    background-color: black;
+}
+
