@@ -99,13 +99,14 @@ func StoreOneBook(w http.ResponseWriter, r *http.Request) {
 		p := r.FormValue("price")
 		b.Price, _ = strconv.ParseFloat(p, 64)
 
-		oid, err := AddBook(b)
+		iId, err := AddBook(b)
 		if err != nil {
 			log.Println("store-one-book", err)
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
-		http.Redirect(w, r, "/book/get?isbn="+oid, http.StatusSeeOther)
+
+		http.Redirect(w, r, "/book/read?isbn="+iId, http.StatusSeeOther)
 	}
 
 	if err := config.TPL.ExecuteTemplate(w, "insert.gohtml", nil); err != nil {

@@ -5,6 +5,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"mongodb-web-dev/config"
 	"time"
@@ -27,10 +28,12 @@ func init() {
 
 func AllBooks() []Book {
 	var books []Book
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	c, err := Books.Find(ctx, bson.D{})
 	if err != nil {
-		log.Fatalln("allBooks:",err)
+		log.Fatalln("allBooks:", err)
 	}
 	defer c.Close(ctx)
 	x := 0
@@ -39,7 +42,7 @@ func AllBooks() []Book {
 
 		err := c.Decode(&b)
 		if err != nil {
-			log.Fatalln("allbooks-loop",err)
+			log.Fatalln("allbooks-loop", err)
 		}
 		books = append(books, b)
 		x++
@@ -48,13 +51,15 @@ func AllBooks() []Book {
 }
 
 func UpdateBook(b Book) (string, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
-	f := bson.D{{"_id", b.Id}}
+	f := bson.M{"_id": b.Id}
 
 	// I use ReplaceOne here because there is an underlying function within the driver that will check what has changed
 	// and Update only that field. (coll.updateOrReplace)
 	x, err := Books.ReplaceOne(ctx, f, b)
+
 	if err != nil {
 		log.Println("UpdateBook:", err)
 		return "", err
@@ -65,8 +70,9 @@ func UpdateBook(b Book) (string, error) {
 }
 
 func FindOneBook(s string) (Book, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	filter := bson.M{"isbn": s}
 
 	var b Book
@@ -82,23 +88,24 @@ func AddBook(b Book) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Add the ID to the object
+	// Because its a new structure the id is initialised with zeros, so we need to assign a real ObjectId here.
 	b.Id = primitive.NewObjectID()
 
-	id, err := Books.InsertOne(ctx, b)
+	oid, err := Books.InsertOne(ctx, b)
 	if err != nil {
 		log.Println(err)
 		return "", err
 	}
 
-	isdn, err := getBookIsbnById(id.InsertedID.(primitive.ObjectID))
+	isbn, err := getBookIsbnById(oid.InsertedID.(primitive.ObjectID))
 
-	return isdn, err
+	return isbn, err
 }
 
-// DeleteBook Takes an ISBN and returns the number of delete books. Which should be 1.
+// DeleteBook Takes an ISBN and returns the number of delete books. Which should normally be 1, but you know mongo.
 func DeleteBook(s string) (int, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
 
 	res, err := Books.DeleteOne(ctx, bson.M{"isbn": s})
 	if err != nil {
@@ -107,14 +114,19 @@ func DeleteBook(s string) (int, error) {
 	return int(res.DeletedCount), nil
 }
 
+// getBookIsbnById will get a mongo Object Id and return the isbn for that record.
 func getBookIsbnById(s primitive.ObjectID) (string, error) {
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	filter := bson.D{{"_id", s}}
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	filter := bson.M{"_id": s}
+	opt := options.FindOne().SetProjection(bson.M{"isbn": 1})
 
 	var b Book
-	if err := Books.FindOne(ctx, filter).Decode(&b); err != nil {
+	if err := Books.FindOne(ctx, filter, opt).Decode(&b); err != nil {
 		log.Println("getBookIsbnById:", err)
 		return "", err
 	}
+
 	return b.Isbn, nil
 }
