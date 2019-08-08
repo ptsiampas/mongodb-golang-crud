@@ -1,9 +1,10 @@
 package books
 
 import (
+	"github.com/ptsiampas/mongodb-golang-crud/config"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
-	"mongodb-web-dev/config"
+
 	"net/http"
 	"strconv"
 )
@@ -19,7 +20,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetOneBook(w http.ResponseWriter, r *http.Request)  {
+func GetOneBook(w http.ResponseWriter, r *http.Request) {
 	isGet(w, r)
 
 	isbn := r.FormValue("isbn")
@@ -29,7 +30,7 @@ func GetOneBook(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 
-	bk, err:= FindOneBook(isbn)
+	bk, err := FindOneBook(isbn)
 	if err != nil {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -46,7 +47,7 @@ func UpdateOneBook(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		bid, _ := primitive.ObjectIDFromHex(r.FormValue("s"))
 		b := Book{
-			Id:  	bid,
+			Id:     bid,
 			Isbn:   r.FormValue("isbn"),
 			Title:  r.FormValue("title"),
 			Author: r.FormValue("author"),
@@ -86,7 +87,6 @@ func UpdateOneBook(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(404), http.StatusNotFound)
 	}
 
-
 }
 
 func StoreOneBook(w http.ResponseWriter, r *http.Request) {
@@ -101,7 +101,7 @@ func StoreOneBook(w http.ResponseWriter, r *http.Request) {
 
 		oid, err := AddBook(b)
 		if err != nil {
-			log.Println("store-one-book",err)
+			log.Println("store-one-book", err)
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
@@ -126,18 +126,11 @@ func RemoveOneBook(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO: Should probably replace this with a page.
-	http.Redirect(w,r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func isGet(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
-		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
-		return
-	}
-}
-
-func isPost(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
 		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
 		return
 	}

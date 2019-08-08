@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/ptsiampas/mongodb-golang-crud/books"
 	"log"
-	"mongodb-web-dev/books"
 	"net/http"
 )
 
